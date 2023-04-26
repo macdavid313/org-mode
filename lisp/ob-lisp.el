@@ -100,7 +100,9 @@ a property list containing the parameters of the block."
                    (with-temp-buffer
                      (insert (org-babel-expand-body:lisp body params))
                      (funcall org-babel-lisp-eval-fn
-                              `(swank:eval-and-grab-output
+                              `(,(pcase org-babel-lisp-eval-fn
+                                   (`slime-eval 'swank:eval-and-grab-output)
+                                   (`sly-eval   'slynk:eval-and-grab-output))
                                 ,(let ((dir (if (assq :dir params)
                                                 (cdr (assq :dir params))
                                               default-directory)))
